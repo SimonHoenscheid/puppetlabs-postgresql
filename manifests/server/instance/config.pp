@@ -250,15 +250,11 @@ define postgresql::server::instance::config (
       notify => Class['postgresql::server::reload'],
     }
   }
-  # lint:ignore:140chars
-  # RHEL 7 and 8 both support drop-in files for systemd units. Gentoo also supports drop-in files.
-  # Edit 02/2023 RHEL basedc Systems and Gentoo need Variables set for $PGPORT, $DATA_DIR or $PGDATA, thats what the drop-in file is for.
-  # lint:endignore:140chars
-  if $facts['os']['family'] in ['RedHat', 'Gentoo'] and $facts['service_provider'] == 'systemd' {
-    postgresql::server::instance::systemd { $service_name:
-      port                 => $port,
-      datadir              => $datadir,
-      extra_systemd_config => $extra_systemd_config,
-    }
+
+  postgresql::server::instance::systemd { $name:
+    port                 => $port,
+    datadir              => $datadir,
+    extra_systemd_config => $extra_systemd_config,
+    service_name         => $service_name,
   }
 }
